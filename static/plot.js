@@ -6,14 +6,21 @@ $(document).ready(function() {
 
     function format4pie(data) {
       var catData = {}
+      var maxVal = 0;
+      for (i in data.ext_file_count) { maxVal = Math.max(maxVal, data.ext_file_count[i].num_files); }
+
       for (i in data.ext_file_count) {
         var ext = data.ext_file_count[i].ext;
             ext = ext.replace(/[\W_]+/g,"");
             ext = ext.toLowerCase();
         if (ext === '') continue;
+
         var cat = ext2cat(ext);
-        var val = data.ext_file_count[i].num_files;
         if (cat=="") continue;
+
+        var val = 1 * data.ext_file_count[i].num_files;
+        if (val < maxVal * 0.01) continue;
+
         if (!(cat in catData)) {
           catData[cat] = {
             "cat": cat,
@@ -57,30 +64,37 @@ $(document).ready(function() {
       return 'other';
     }
 
-    var width  = $('#plot-pie').width(),
-        height = $('#plot-pie').height()-50,
-        radius = -50 + Math.min(width, height) / 2;
+    // -------------------------------------------------------------------------
 
-    var x = d3.scale.linear()
-        .range([0, 2 * Math.PI]);
+    var width  = $(window).width(),
+        height = $(window).height(),
+        radius = -50 + (Math.min(width, height) / 2);
 
-    var y = d3.scale.sqrt()
-        .range([0, radius]);
+    var x = d3.scale.linear().range([0, 2 * Math.PI]);
+
+    var y = d3.scale.sqrt().range([0, radius]);
 
     var color = function(d) {
       var scale = cat2col(d.cat)
-      if (d.children) {
-        return scale(0).hex();
-      } else {
-        return scale(d.counter/catCounter[d.cat]).hex();
-      }
+      return (d.children) ? scale(0).hex() : scale(d.counter/catCounter[d.cat]).hex();
     };
 
-    var svg = d3.select("#plot-pie").append("svg")
-        .attr("width", width)
-        .attr("height", height)
+    var svg = d3.select("#plot-pie")
+      .append("svg")
+        .attr("id", "msvg")
+        .attr("width", '100%')
+        .attr("height", '100%')
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 "+Math.min(width,height) +' '+Math.min(width,height))
+        .classed("svg-content-responsive", true)
       .append("g")
         .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
+
+    // d3.select(window).on('resize', function() {
+    //     var w  = $(window).width(),
+    //         h = $(window).height();
+    //     svg.attr("transform", "translate(" + w / 2 + "," + (h / 2) + ")");
+    // })
 
     var partition = d3.layout.partition()
         .sort(null)
