@@ -57,7 +57,7 @@ $(document).ready(function() {
     }
 
     var width  = $('#plot-pie').width(),
-        height = $('#plot-pie').height(),
+        height = $('#plot-pie').height()-50,
         radius = -50 + Math.min(width, height) / 2;
 
     var x = d3.scale.linear()
@@ -101,6 +101,7 @@ $(document).ready(function() {
           .style("fill", function(d) { return color(d); })
           .on("click", click)
           .on("mouseover", mouseover)
+          .on("mouseout", mouseout)
           .each(stash);
 
 
@@ -121,6 +122,10 @@ $(document).ready(function() {
 
     function mouseover(d) {
       if (d.children) $('#ext-info').html(':'+d.name); else $('#ext-info').html('.'+d.name);
+    }
+
+    function mouseout() {
+      $('#ext-info').html('');
     }
 
     function click(d) {
