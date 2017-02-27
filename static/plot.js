@@ -50,10 +50,10 @@ $(document).ready(function() {
 
     function ext2cat (ext) {
       var ext = ext.toLowerCase();
-      if (['py','html','css'].indexOf(ext) > -1) return 'code';
+      if (['py','html','htm','css','pyc','js','php','cpp','h','sh','jar','cgi','java'].indexOf(ext) > -1) return 'code';
       if (['markdown','txt','pdf'].indexOf(ext) > -1) return 'text';
       if (['json','xml','sql'].indexOf(ext) > -1) return 'data';
-      if (['jpg','jpeg','png','gif','ttf'].indexOf(ext) > -1) return 'image';
+      if (['jpg','jpeg','png','gif','ttf','svg'].indexOf(ext) > -1) return 'image';
       return 'other';
     }
 
