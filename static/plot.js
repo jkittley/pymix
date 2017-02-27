@@ -3,6 +3,7 @@ $(document).ready(function() {
 
     var catCounter = {}
     var depth;
+    var ignoreLower = 0.01;
 
     function format4pie(data) {
       var catData = {}
@@ -19,7 +20,7 @@ $(document).ready(function() {
         if (cat=="") continue;
 
         var val = 1 * data.ext_file_count[i].num_files;
-        if (val < maxVal * 0.01) continue;
+        if (val < maxVal * ignoreLower) continue;
 
         if (!(cat in catData)) {
           catData[cat] = {
