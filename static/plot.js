@@ -2,12 +2,14 @@ $(document).ready(function() {
   $.getJSON('/static/pymix-data.json', function(data) {
 
     var catCounter = {}
+    var depth;
 
     function format4pie(data) {
       var catData = {}
       for (i in data.ext_file_count) {
         var ext = data.ext_file_count[i].ext;
             ext = ext.replace(/[\W_]+/g,"");
+        if (ext === '') continue;
         var cat = ext2cat(ext);
         var val = data.ext_file_count[i].num_files;
         if (cat=="") continue;
@@ -36,13 +38,11 @@ $(document).ready(function() {
       return returnData;
     }
 
-
     function cat2col (cat) {
-      // console.log(cat);
-      if (cat==='all') return chroma.scale(['#fcdfe6', '#fcdfe6']);
-      if (cat==='code') return chroma.scale(['#c25975', '#86194c']);
-      if (cat==='text') return chroma.scale(['#4978c3', '#A2BAE0']);
-      if (cat==='data') return chroma.scale(['#88b200', '#1c6047']);
+      if (cat==='all')   return chroma.scale(['#fcdfe6', '#fcdfe6']);
+      if (cat==='code')  return chroma.scale(['#c25975', '#86194c']);
+      if (cat==='text')  return chroma.scale(['#4978c3', '#A2BAE0']);
+      if (cat==='data')  return chroma.scale(['#88b200', '#1c6047']);
       if (cat==='image') return chroma.scale(['#f0bc48', '#c43210']);
       return chroma.scale(['#dddde1', '#59596a']);
     }
@@ -75,7 +75,6 @@ $(document).ready(function() {
       }
     };
 
-
     var svg = d3.select("#plot-pie").append("svg")
         .attr("width", width)
         .attr("height", height)
@@ -93,7 +92,6 @@ $(document).ready(function() {
         .outerRadius(function(d) { return Math.max(0, y(d.y + d.dy)); });
 
     root = format4pie(data);
-
     var node = root;
     var path = svg.datum(root).selectAll("path")
       .data(partition.nodes)
@@ -106,20 +104,23 @@ $(document).ready(function() {
           .each(stash);
 
 
-    svg.append("g").selectAll("text")
-      .data(partition.nodes)
-      .enter().append("text")
-        .attr("id", function(d) { return "#path-text-"+d.name; })
-        .attr("x", 10)
-        .attr("dy", 20)
-        .append("textPath")
-          .attr("xlink:href", function(d) { return "#path-"+d.name; })
-          .text(function(d) { return d.name; });
+    // var labels = svg.append("g").selectAll("text")
+    //   .data(partition.nodes)
+    //   .enter().append("text")
+    //     .attr("id", function(d) { return "#path-text-"+d.name; })
+    //     .attr("x", 10)
+    //     .attr("dy", 20)
+    //     .append("textPath")
+    //       .attr("xlink:href", function(d) { return "#path-"+d.name; })
+    //       .text(function(d) {
+    //         if ($("#path-"+d.name).width() * $("#path-"+d.name).height() < 1000) return '';
+    //         return d.name;
+    //       });
 
           //console.log(getBoundingBoxCenter(d3.select("#path-"+d.name)));
 
     function mouseover(d) {
-      // console.log(d);
+      if (d.children) $('#ext-info').html(':'+d.name); else $('#ext-info').html('.'+d.name);
     }
 
     function click(d) {
@@ -169,12 +170,6 @@ $(document).ready(function() {
             ? function(t) { return arc(d); }
             : function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); return arc(d); };
       };
-    }
-
-    function getBoundingBoxCenter (selection) {
-      var element = selection.node();
-      var bbox = element.getBBox();
-      return [bbox.x + bbox.width/2, bbox.y + bbox.height/2];
     }
 
  });
