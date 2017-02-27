@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $.getJSON('/static/pymix-data.json', function(data) {
+  $.getJSON('http://cdn.pychart.io/other/pymix-data-1.json', function(data) {
 
     var catCounter = {}
     var depth;
@@ -9,6 +9,7 @@ $(document).ready(function() {
       for (i in data.ext_file_count) {
         var ext = data.ext_file_count[i].ext;
             ext = ext.replace(/[\W_]+/g,"");
+            ext = ext.toLowerCase();
         if (ext === '') continue;
         var cat = ext2cat(ext);
         var val = data.ext_file_count[i].num_files;
