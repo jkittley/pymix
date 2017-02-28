@@ -46,7 +46,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.js"></script>
   <script>
     $(document).ready(function(){
-      $('.ack').click(function (e) { e.preventDefault(); bootbox.alert($('#ack-message').html()); return false; });
+      $('#button-ack').click(function (e) { e.preventDefault(); bootbox.alert($('#content-ack').html()); return false; });
+      $('#button-info').click(function (e) { e.preventDefault(); bootbox.alert($('#content-info').html()); return false; });
     });
   </script>
   <script src="static/chroma.min.js"></script>
@@ -54,6 +55,7 @@
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <link rel="stylesheet" href="static/style.css">
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -70,12 +72,44 @@
 <div id="plot-pie"></div>
 <div id="site-title">PyMix</div>
 <div id="site-sub-title" class="hidden-xs">
-  Exploring Public Python Project Composition.<br>
-  We have examined thousands of public repositories and analysed the file types within.
+  Exploring Public Python Project Composition.
 </div>
 <div id="site-pychart" class="hidden-xs hidden-sm">Interested in how libraries are used together? Visit our sister site <a href="http://pychart.io/">PyChart.io</a></div>
-<div id="thanks"><a href="#" class="ack">Acknowledgements</a></div>
-<div id="ack-message" style="display:none;">This visualisation was adapted from an example created by <a href="https://bl.ocks.org/kerryrodden/477c1bfb081b783f80ad" target="_blank">Kerry Rodden</a></div>
+<div id="site-ack">
+  <a href="#" class="btn btn-default" id="button-ack"><i class="fa fa-fw fa-user"></i></a>
+  <a href="#" class="btn btn-default" id="button-sett" data-toggle="modal" data-target="#modal-sett"><i class="fa fa-fw fa-cog"></i></a>
+  <a href="#" class="btn btn-default" id="button-info"><i class="fa fa-fw fa-info"></i></a>
+</div>
+<div id="content-ack"  style="display:none;"><strong>Acknowledgements</strong><BR>This visualisation was adapted from an example created by <a href="https://bl.ocks.org/kerryrodden/477c1bfb081b783f80ad" target="_blank">Kerry Rodden</a></div>
+<div id="content-info" style="display:none;"><strong>Info</strong><BR>We have examined thousands of public repositories and analysed the file types within.</div>
+<div id="modal-sett" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Settings</h4>
+      </div>
+      <div class="modal-body">
+          <form>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Threshold - Remove bottom X%</label>
+            <input id="setting-threshold" type="number" min="1" max="99" class="form-control" value="1">
+          </div>
+          <div class="checkbox">
+            <label>
+              <input id="setting-hide-py" type="checkbox"> Hide .py .pyc files
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button id="button-apply-settings" type="button" class="btn btn-primary">Apply</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <div id="ext-info"></div>
 </body>
 </html>
